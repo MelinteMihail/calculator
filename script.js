@@ -1,3 +1,7 @@
+const digits = document.querySelectorAll(".digit");
+let displayValue = document.querySelector("input");
+
+
 function add(num1, num2) {
     return num1 + num2;
 }
@@ -33,4 +37,11 @@ function operate(firstNumber, operator, secondNumber) {
         case "/":
             return divide(firstNumber,secondNumber);
     }
+}
+
+
+for(let i = 0; i < digits.length; i++) {
+    digits[i].addEventListener("click", () => {
+        displayValue.value += i+1;
+    });
 }

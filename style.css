@@ -11,6 +11,10 @@ html, body {
     height: 100%;
 }
 
+button {
+    padding: 20px;
+}
+
 .container {
     height: 100%;
     display: flex;
@@ -20,19 +24,23 @@ html, body {
 }
 
 .display {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
     background-color: red;
     width: 300px;
     height: 50px;
     padding: 22px;
+    border: none;
+    border-radius: 15px;
+    color: white;
+    margin-bottom: 50px;
+}
+
+.display:active,
+.display:focus {
+    outline:none;
 }
 
 .digit {
     background-color: yellow;
-    width: 25px;
-    height: 25px;
     text-align: center;
 }
 
