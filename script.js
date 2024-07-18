@@ -1,4 +1,6 @@
 const digits = document.querySelectorAll(".digit");
+const operators = document.querySelectorAll(".operator");
+const equals = document.querySelector(".equals");
 let displayValue = document.querySelector("input");
 
 
@@ -45,3 +47,17 @@ for(let i = 0; i < digits.length; i++) {
         displayValue.value += i+1;
     });
 }
+
+for(let j = 0; j < operators.length; j++) {
+    operators[j].addEventListener("click", () => {
+        firstNumber = Number(displayValue.value);
+        operator = operators[j].textContent;
+        displayValue.value = "";
+    });
+}
+
+equals.addEventListener("click", () => {
+    secondNumber = Number(displayValue.value);
+    let result = operate(firstNumber, operator, secondNumber);
+    displayValue.value = result;
+});
