@@ -47,3 +47,15 @@ button {
 .digit:hover {
     cursor: pointer;
 }
+
+.operator {
+    background-color: green;
+}
+
+.operator:active    {
+    background-color: orange;
+}
+
+.clearBtn {
+    background-color: firebrick;
+}
