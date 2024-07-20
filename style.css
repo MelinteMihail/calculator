@@ -13,49 +13,25 @@ html, body {
 
 button {
     padding: 20px;
+    border: 0.5px solid black;
 }
 
 .container {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column; 
+    height: 100%; 
 }
 
-.display {
+.operator,
+.equals {
     background-color: red;
-    width: 300px;
-    height: 50px;
-    padding: 22px;
-    border: none;
-    border-radius: 15px;
-    color: white;
-    margin-bottom: 50px;
 }
 
-.display:active,
-.display:focus {
-    outline:none;
-}
-
-.digit {
-    background-color: yellow;
-    text-align: center;
-}
-
-.digit:hover {
-    cursor: pointer;
-}
-
-.operator {
+.operand {
     background-color: green;
 }
 
-.operator:active    {
-    background-color: orange;
-}
-
-.clearBtn {
-    background-color: firebrick;
+.clear,
+.sign,
+.procent,
+.decimal {
+    background-color: blueviolet;
 }
