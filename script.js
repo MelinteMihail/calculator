@@ -33,11 +33,140 @@ function operate(num1, op, num2){
 const numbers = document.querySelectorAll(".operand");
 const operators = document.querySelectorAll(".operator");
 const equals = document.querySelector(".equals");
+const display = document.querySelector(".display");
 let displayValue = "0";
-let choseSecond = false, nextOperation = false;
+let choseSecond = false, choseOp = false;
 let firstNumber = null, operator = null, secondNumber = null;
 
-function pickFirst(display) {
+function getFirstNumber() {
+    for(let i = 0; i < numbers.length; i++) {
+        numbers[i].addEventListener("click", () => {
+            if(!choseSecond) {
+                if(displayValue === "0") {
+                    displayValue = numbers[i].textContent;
+                    display.textContent = displayValue;
+                } else {
+                    displayValue += numbers[i].textContent;
+                    display.textContent = displayValue;
+                }
+                firstNumber = Number(display.textContent);
+            }
+        });
+    }
+}
+
+getFirstNumber();
+
+function getOperator() {
+    for(let i = 0; i < operators.length; i++) {
+        operators[i].addEventListener("click", () => {
+            if(!choseOp) {
+                operator = operators[i].textContent;
+                choseSecond = true;
+            }
+        });
+    
+    }
+}
+
+getOperator();
+
+function getSecondNumber() {
+    let check = false;
+    for(let i = 0; i < numbers.length; i++) {
+        numbers[i].addEventListener("click", () => {
+            if(choseSecond) {
+                if(displayValue === String(firstNumber) && check === false) {
+                    displayValue = numbers[i].textContent;
+                    display.textContent = displayValue;
+                    check = true;
+                } else {
+                    displayValue += numbers[i].textContent;
+                    display.textContent = displayValue;
+                }
+                secondNumber = Number(display.textContent); 
+                choseOp = true;
+            }
+        })
+    }
+}
+
+getSecondNumber();
+
+
+function getResult() {
+    for(let i = 0; i < operators.length; i++) {
+        operators[i].addEventListener("click", () => {
+            if(choseOp) {
+                displayValue = operate(firstNumber, operator, secondNumber);
+                display.textContent = displayValue;
+                firstNumber = Number(display.textContent);
+                operator = operators[i].textContent;
+            }
+        });
+    }
+}
+
+getResult();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* function pickFirst(display) {
     for(let i = 0; i < numbers.length; i++) {  
         numbers[i].addEventListener("click", () => {
             if(!choseSecond) {
@@ -100,9 +229,73 @@ function calculateResult(display) {
 
 function populateDisplay() {
     const display = document.querySelector(".display");
+    for(let i = 0; i < numbers.length; i++) {  
+        numbers[i].addEventListener("click", () => {
+            if(!choseSecond) {
+                if(displayValue === "0") {
+                    displayValue = numbers[i].textContent;
+                    display.textContent = displayValue; 
+                } else {
+                    displayValue += numbers[i].textContent;
+                    display.textContent = displayValue; 
+                }
+                firstNumber = Number(display.textContent);
+            }
+        });
+    }
+    for(let i = 0; i < operators.length; i++) {
+        operators[i].addEventListener("click", () => {
+            if(firstNumber !== null) {
+                operator = operators[i].textContent;
+                choseSecond = true;
+            }
+        });
+    }
+    for(let i = 0; i < numbers.length; i++) {
+        numbers[i].addEventListener("click", () => {
+            let check = false;
+            if(choseSecond) {
+                if(display.textContent === String(firstNumber) && check === false){
+                    displayValue = numbers[i].textContent;
+                    display.textContent = displayValue;
+                    check = true;
+                } else {
+                    displayValue += numbers[i].textContent;
+                    display.textContent = displayValue;
+                }
+                secondNumber = Number(display.textContent);
+            }
+        });
+    }
+    equals.addEventListener("click", () => {
+        if(firstNumber !== null && operator !== null && secondNumber !== null) {
+            displayValue = operate(firstNumber, operator, secondNumber);
+            display.textContent = displayValue;
+            firstNumber = Number(display.textContent);
+            
+        } else {
+            display.textContent = "NaN";
+        }
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     pickFirst(display);
     pickOperator();
     pickSecond(display);
-    calculateResult(display);
-}
+    equals.addEventListener("click", () => {
+        displayValue = operate(firstNumber, operator, secondNumber);
+        display.textContent = displayValue;
+    }) 
+
 populateDisplay();
+*/

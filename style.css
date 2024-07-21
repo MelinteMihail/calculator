@@ -16,6 +16,10 @@ button {
     border: 0.5px solid black;
 }
 
+.operator:focus {
+    background-color: lightgreen;
+}
+
 .container {
     height: 100%; 
 }
