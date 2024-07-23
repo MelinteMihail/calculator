@@ -98,6 +98,18 @@ function getSecondNumber() {
 }
 
 function getResult() {
+    let check2 = false;
+    equals.addEventListener("click", () => {
+        if(choseOp) {
+            displayValue = operate(firstNumber, operator, secondNumber);
+            display.textContent = displayValue;
+            firstNumber = Number(display.textContent);
+            choseOp = false;
+            displayValue = "";
+            check2 = true;
+            secondNumber = null;
+        }
+    });
     for(let i = 0; i < operators.length; i++) {
         operators[i].addEventListener("click", () => {
             if(choseOp) {
@@ -110,6 +122,7 @@ function getResult() {
             }
         });
     }
+
 }
 populateDisplay();
 
