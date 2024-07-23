@@ -38,6 +38,16 @@ let displayValue = "0";
 let choseSecond = false, choseOp = false;
 let firstNumber = null, operator = null, secondNumber = null;
 
+function populateDisplay() {
+    getFirstNumber();
+
+    getOperator();
+
+    getSecondNumber();
+
+    getResult();
+}
+
 function getFirstNumber() {
     for(let i = 0; i < numbers.length; i++) {
         numbers[i].addEventListener("click", () => {
@@ -49,13 +59,11 @@ function getFirstNumber() {
                     displayValue += numbers[i].textContent;
                     display.textContent = displayValue;
                 }
-                firstNumber = Number(display.textContent);
+                firstNumber = Number(displayValue);
             }
         });
     }
 }
-
-getFirstNumber();
 
 function getOperator() {
     for(let i = 0; i < operators.length; i++) {
@@ -69,14 +77,12 @@ function getOperator() {
     }
 }
 
-getOperator();
-
 function getSecondNumber() {
     let check = false;
     for(let i = 0; i < numbers.length; i++) {
         numbers[i].addEventListener("click", () => {
             if(choseSecond) {
-                if(displayValue === String(firstNumber) && check === false) {
+                if(displayValue === String(firstNumber) && !check) {
                     displayValue = numbers[i].textContent;
                     display.textContent = displayValue;
                     check = true;
@@ -84,15 +90,12 @@ function getSecondNumber() {
                     displayValue += numbers[i].textContent;
                     display.textContent = displayValue;
                 }
-                secondNumber = Number(display.textContent); 
+                secondNumber = Number(displayValue); 
                 choseOp = true;
             }
         })
     }
 }
-
-getSecondNumber();
-
 
 function getResult() {
     for(let i = 0; i < operators.length; i++) {
@@ -102,12 +105,14 @@ function getResult() {
                 display.textContent = displayValue;
                 firstNumber = Number(display.textContent);
                 operator = operators[i].textContent;
+                choseOp = false;
+                displayValue = "";
             }
         });
     }
 }
+populateDisplay();
 
-getResult();
 
 
 
