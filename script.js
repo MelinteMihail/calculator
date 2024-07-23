@@ -7,7 +7,6 @@ let choseSecond = false, choseOp = false;
 let firstNumber = null, operator = null, secondNumber = null;
 let lastOperator = null, lastSecondNumber = null;
 
-
 function add(num1, num2) {
     return num1 + num2;
 }
@@ -93,13 +92,18 @@ function getResult() {
     equals.addEventListener("click", () => {
         if(choseOp) {
             displayValue = operate(firstNumber, operator, secondNumber);
-            display.textContent = displayValue;
-            firstNumber = Number(display.textContent);
-            lastOperator = operator;
-            lastSecondNumber = secondNumber;
-            choseOp = false;
-            displayValue = "";
-            secondNumber = null;
+            if(operator === "/" && String(secondNumber) === "0") {
+                display.textContent = "You can't divide by 0!";
+                equals.disabled = true;
+            } else {
+                display.textContent = displayValue;
+                firstNumber = Number(display.textContent);
+                lastOperator = operator;
+                lastSecondNumber = secondNumber;
+                choseOp = false;
+                displayValue = "";
+                secondNumber = null;
+            }
         } else if(lastOperator !== null && lastSecondNumber !== null) {
             displayValue = operate(firstNumber, lastOperator, lastSecondNumber);
             display.textContent = displayValue;
@@ -120,7 +124,6 @@ function getResult() {
             }
         });
     }
-
 }
 
 function populateDisplay() {
