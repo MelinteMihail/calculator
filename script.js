@@ -6,6 +6,7 @@ let displayValue = "0";
 let choseSecond = false, choseOp = false;
 let firstNumber = null, operator = null, secondNumber = null;
 let lastOperator = null, lastSecondNumber = null;
+let roundDecimals = [];
 
 function add(num1, num2) {
     return num1 + num2;
@@ -96,7 +97,13 @@ function getResult() {
                 display.textContent = "You can't divide by 0!";
                 equals.disabled = true;
             } else {
-                display.textContent = displayValue;
+                roundDecimals = String(displayValue).split(".");
+                if(roundDecimals[1].length > 3) {
+                    displayValue = String(Number(displayValue).toFixed(5));
+                    display.textContent = displayValue;
+                } else {
+                    display.textContent = displayValue;
+                }
                 firstNumber = Number(display.textContent);
                 lastOperator = operator;
                 lastSecondNumber = secondNumber;
@@ -106,6 +113,13 @@ function getResult() {
             }
         } else if(lastOperator !== null && lastSecondNumber !== null) {
             displayValue = operate(firstNumber, lastOperator, lastSecondNumber);
+            roundDecimals = String(displayValue).split(".");
+            if(roundDecimals[1].length > 3) {
+                displayValue = String(Number(displayValue).toFixed(5));
+                display.textContent = displayValue;
+            } else {
+                display.textContent = displayValue;
+            }
             display.textContent = displayValue;
             firstNumber = Number(display.textContent);
         }
@@ -114,6 +128,13 @@ function getResult() {
         operators[i].addEventListener("click", () => {
             if(choseOp) {
                 displayValue = operate(firstNumber, operator, secondNumber);
+                roundDecimals = String(displayValue).split(".");
+                if(roundDecimals[1].length > 3) {
+                    displayValue = String(Number(displayValue).toFixed(5));
+                    display.textContent = displayValue;
+                } else {
+                    display.textContent = displayValue;
+                }
                 display.textContent = displayValue;
                 firstNumber = Number(display.textContent);
                 operator = operators[i].textContent;
