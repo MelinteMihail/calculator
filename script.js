@@ -2,6 +2,8 @@ const numbers = document.querySelectorAll(".operand");
 const operators = document.querySelectorAll(".operator");
 const equals = document.querySelector(".equals");
 const display = document.querySelector(".display");
+const clearBtn = document.querySelector(".clear");
+const decimal = document.querySelector(".decimal");
 let displayValue = "0";
 let choseSecond = false, choseOp = false;
 let firstNumber = null, operator = null, secondNumber = null;
@@ -44,9 +46,10 @@ function getFirstNumber() {
     for(let i = 0; i < numbers.length; i++) {
         numbers[i].addEventListener("click", () => {
             if(!choseSecond) {
-                if(displayValue === "0") {
+                if(displayValue === "0" || choseOp) {
                     displayValue = numbers[i].textContent;
                     display.textContent = displayValue;
+                    choseOp = false;
                 } else {
                     displayValue += numbers[i].textContent;
                     display.textContent = displayValue;
@@ -63,10 +66,11 @@ function getOperator() {
             if(!choseOp) {
                 operator = operators[i].textContent;
                 choseSecond = true;
+                decimal.disabled = false;
             }
         });
-    
     }
+    displayValue = "";
 }
 
 function getSecondNumber() {
@@ -85,7 +89,7 @@ function getSecondNumber() {
                 secondNumber = Number(displayValue); 
                 choseOp = true;
             }
-        })
+        });
     }
 }
 
@@ -98,9 +102,13 @@ function getResult() {
                 equals.disabled = true;
             } else {
                 roundDecimals = String(displayValue).split(".");
-                if(roundDecimals[1].length > 3) {
-                    displayValue = String(Number(displayValue).toFixed(5));
-                    display.textContent = displayValue;
+                if(roundDecimals[1] !== undefined) {
+                    if(roundDecimals[1].length > 3) {
+                        displayValue = String(Number(displayValue).toFixed(5));
+                        display.textContent = displayValue;
+                    } else {
+                        display.textContent = displayValue;
+                    }
                 } else {
                     display.textContent = displayValue;
                 }
@@ -114,9 +122,13 @@ function getResult() {
         } else if(lastOperator !== null && lastSecondNumber !== null) {
             displayValue = operate(firstNumber, lastOperator, lastSecondNumber);
             roundDecimals = String(displayValue).split(".");
-            if(roundDecimals[1].length > 3) {
-                displayValue = String(Number(displayValue).toFixed(5));
-                display.textContent = displayValue;
+            if(roundDecimals[1] !== undefined) {
+                if(roundDecimals[1].length > 3) {
+                    displayValue = String(Number(displayValue).toFixed(5));
+                    display.textContent = displayValue;
+                } else {
+                    display.textContent = displayValue;
+                }
             } else {
                 display.textContent = displayValue;
             }
@@ -129,9 +141,13 @@ function getResult() {
             if(choseOp) {
                 displayValue = operate(firstNumber, operator, secondNumber);
                 roundDecimals = String(displayValue).split(".");
-                if(roundDecimals[1].length > 3) {
-                    displayValue = String(Number(displayValue).toFixed(5));
-                    display.textContent = displayValue;
+                if(roundDecimals[1] !== undefined) {
+                    if(roundDecimals[1].length > 3) {
+                        displayValue = String(Number(displayValue).toFixed(5));
+                        display.textContent = displayValue;
+                    } else {
+                        display.textContent = displayValue;
+                    }
                 } else {
                     display.textContent = displayValue;
                 }
@@ -147,10 +163,35 @@ function getResult() {
     }
 }
 
+function addDecimal() {
+    decimal.addEventListener("click", () => {
+        if(!displayValue.includes(".")) {
+            displayValue += decimal.textContent;
+            display.textContent = displayValue;
+            decimal.disabled = true;
+        }
+    });
+ }
+
 function populateDisplay() {
     getFirstNumber();
     getOperator();
     getSecondNumber();
     getResult();
+    addDecimal();
 }
 populateDisplay();
+
+
+/* function clearDisplay() {
+    clearBtn.addEventListener("click", () => {
+        displayValue = "0";
+        display.textContent = displayValue;
+        choseSecond = false, choseOp = false;
+        firstNumber = null, operator = null, secondNumber = null;
+        lastOperator = null, lastSecondNumber = null;
+        roundDecimals = [];
+    });
+}
+
+clearDisplay(); */
