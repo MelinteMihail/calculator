@@ -4,6 +4,7 @@ const equals = document.querySelector(".equals");
 const display = document.querySelector(".display");
 const clearBtn = document.querySelector(".clear");
 const decimal = document.querySelector(".decimal");
+const delBtn = document.querySelector(".delete")
 let displayValue = "0";
 let choseSecond = false, choseOp = false;
 let firstNumber = null, operator = null, secondNumber = null;
@@ -74,6 +75,9 @@ function getOperator() {
 }
 
 function getSecondNumber() {
+    if(choseSecond) {
+        deleteLast();
+    }
     let check = false;
     for(let i = 0; i < numbers.length; i++) {
         numbers[i].addEventListener("click", () => {
@@ -112,7 +116,7 @@ function getResult() {
                 } else {
                     display.textContent = displayValue;
                 }
-                firstNumber = Number(display.textContent);
+                firstNumber = Number(displayValue);
                 lastOperator = operator;
                 lastSecondNumber = secondNumber;
                 choseOp = false;
@@ -133,7 +137,7 @@ function getResult() {
                 display.textContent = displayValue;
             }
             display.textContent = displayValue;
-            firstNumber = Number(display.textContent);
+            firstNumber = Number(displayValue);
         }
     });
     for(let i = 0; i < operators.length; i++) {
@@ -152,7 +156,7 @@ function getResult() {
                     display.textContent = displayValue;
                 }
                 display.textContent = displayValue;
-                firstNumber = Number(display.textContent);
+                firstNumber = Number(displayValue);
                 operator = operators[i].textContent;
                 lastOperator = operator;
                 lastSecondNumber = secondNumber;
@@ -171,7 +175,24 @@ function addDecimal() {
             decimal.disabled = true;
         }
     });
- }
+}
+
+function deleteLast() {
+    delBtn.addEventListener("click", () => {
+        if(displayValue.substring(0, displayValue.length - 1) === "") {
+            displayValue = "0";
+        } else {
+            displayValue = displayValue.substring(0, displayValue.length - 1);
+        }
+        display.textContent = displayValue;
+        
+        if(choseSecond) {
+            secondNumber = Number(displayValue); 
+        } else {
+            firstNumber = Number(displayValue);
+        }
+    });
+}
 
 function populateDisplay() {
     getFirstNumber();
@@ -179,8 +200,11 @@ function populateDisplay() {
     getSecondNumber();
     getResult();
     addDecimal();
+    deleteLast();
 }
 populateDisplay();
+
+
 
 
 /* function clearDisplay() {
