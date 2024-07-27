@@ -5,6 +5,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
+    font-size: 24px;
 }
 
 html, body {
@@ -15,14 +16,61 @@ button {
     padding: 20px;
     border: 0.5px solid black;
     color: #ffffff;
+    width: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+button:disabled {
+    background-color: gray;
 }
 
-.operator:focus {
+#zero {
+    width: 180px;
+}
+
+.operator:focus,
+.operand:focus {
     background-color: lightgreen;
 }
 
+.container-wrapper {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .container {
-    height: 100%; 
+    height: max-content;
+    width: max-content;
+    border: 15px solid black;
+}
+
+.button-wrapper {
+    width: 366px;
+    height: 420px;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: gray;
+    gap: 2px;
+}
+
+.display-wrapper {
+    background: #b2b9b7;
+    width: 366px;
+    display:flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 90px;
+    border: 3px solid #e3b261;
+    border-bottom: 8px solid #e3b261; 
+
+}
+
+.display {
+    font-size: 30px;
 }
 
 .operator,
@@ -39,8 +87,4 @@ button {
 .procent,
 .decimal {
     background-color: blueviolet;
-}
-
-button:disabled {
-    background-color: gray;
 }
