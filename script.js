@@ -67,6 +67,22 @@ function getFirstNumber() {
                 firstNumber = Number(displayValue);
             }
         });
+
+        window.addEventListener("keydown", (e) => {
+            if(!choseSecond) {
+                if(e.code === `Digit${numbers[i].textContent}` || e.code === `Numpad${numbers[i].textContent}`){
+                    if(displayValue === "0" || choseOp) {
+                        displayValue = numbers[i].textContent;
+                        display.textContent = displayValue;
+                        choseOp = false;
+                    } else {
+                        displayValue += numbers[i].textContent;
+                        display.textContent = displayValue;
+                    }
+                    firstNumber = Number(displayValue);
+                }
+            }
+        });
     }
 }
 
@@ -79,23 +95,30 @@ function getOperator() {
                 decimal.disabled = false;
             }
         });
+
+        window.addEventListener("keydown", (e) => {
+            if(e.key === operators[i].textContent) {
+                if(!choseOp) {
+                    operator = operators[i].textContent;
+                    choseSecond = true;
+                    decimal.disabled = false;
+                }
+            }
+        });
     }
-    displayValue = "";
 }
 
 function getSecondNumber() {
     let check = false;
     for(let i = 0; i < numbers.length; i++) {
         numbers[i].addEventListener("click", () => {
-            if(alreadyPressed) {
-                displayValue = "";
-                display.textContent = numbers[i].textContent;   
-                displayValue = display.textContent;
-                alreadyPressed = false;
-            }
-            else {
-                
-                if(choseSecond) {
+            if(choseSecond) {
+                if(alreadyPressed) {
+                    displayValue = "";
+                    display.textContent = numbers[i].textContent;   
+                    displayValue = display.textContent;
+                    alreadyPressed = false;
+                } else {
                     if(displayValue === String(firstNumber) && !check) {
                         displayValue = numbers[i].textContent;
                         display.textContent = displayValue;
@@ -107,48 +130,81 @@ function getSecondNumber() {
                     secondNumber = Number(displayValue); 
                     choseOp = true;
                 }
+            }
+            
+        });
 
+        window.addEventListener("keydown", (e) => {
+            if(choseSecond) {
+                if(e.code === `Digit${numbers[i].textContent}` || e.code === `Numpad${numbers[i].textContent}`){
+                    if(alreadyPressed) {
+                        displayValue = "";
+                        display.textContent = numbers[i].textContent;   
+                        displayValue = display.textContent;
+                        alreadyPressed = false;
+                    } else {
+                        if(displayValue === String(firstNumber) && !check) {
+                            displayValue = numbers[i].textContent;
+                            display.textContent = displayValue;
+                            check = true;
+                        } else {
+                            displayValue += numbers[i].textContent;
+                            display.textContent = displayValue;
+                        }
+                        secondNumber = Number(displayValue); 
+                        choseOp = true;
+                    }
+                }
             }
         });
     }
 }
 
-// IMPORTANT! FIX getResult FUNCTION!! IT BREAKS EVERYTHING!!!  
-
-function getResult() {
-    equals.addEventListener("click", () => {
-        if(choseOp) {
-            displayValue = operate(firstNumber, operator, secondNumber);
-            if(operator === "/" && String(secondNumber) === "0") {
-                displayValue = "";
-                display.textContent = "You can't divide by 0!";
-            } else {
-                roundDecimals = String(displayValue).split(".");
-                if(roundDecimals[1] !== undefined) {
-                    shortenDecimal();
-                } else {
-                    display.textContent = displayValue;
-                }
-                firstNumber = Number(displayValue);
-                lastOperator = operator;
-                lastSecondNumber = secondNumber;
-                choseOp = false;
-                displayValue = "";
-                secondNumber = null;
-            }
-        } else if(lastOperator !== null && lastSecondNumber !== null) {
-            displayValue = operate(firstNumber, lastOperator, lastSecondNumber);
+function getResultFunc() {
+    if(choseOp) {
+        displayValue = operate(firstNumber, operator, secondNumber);
+        if(operator === "/" && String(secondNumber) === "0") {
+            displayValue = "";
+            display.textContent = "You can't divide by 0!";
+        } else {
             roundDecimals = String(displayValue).split(".");
             if(roundDecimals[1] !== undefined) {
                 shortenDecimal();
             } else {
                 display.textContent = displayValue;
             }
-            display.textContent = displayValue;
             firstNumber = Number(displayValue);
-            alreadyPressed = true;
+            lastOperator = operator;
+            lastSecondNumber = secondNumber;
+            choseOp = false;
+            displayValue = "";
+            secondNumber = null;
+        }
+    } else if(lastOperator !== null && lastSecondNumber !== null) {
+        displayValue = operate(firstNumber, lastOperator, lastSecondNumber);
+        roundDecimals = String(displayValue).split(".");
+        if(roundDecimals[1] !== undefined) {
+            shortenDecimal();
+        } else {
+            display.textContent = displayValue;
+        }
+        display.textContent = displayValue;
+        firstNumber = Number(displayValue);
+        alreadyPressed = true;
+    }
+}
+
+function getResult() {
+    equals.addEventListener("click", () => {
+        getResultFunc();
+    });
+
+    window.addEventListener("keydown", (e) => {
+        if(e.code === "NumpadEnter" || e.code === "Equal") {
+            getResultFunc();
         }
     });
+
     for(let i = 0; i < operators.length; i++) {
         operators[i].addEventListener("click", () => {
             if(choseOp) {
@@ -168,6 +224,27 @@ function getResult() {
                 displayValue = "";
             }
         });
+
+        window.addEventListener("keydown", (e) => {
+            if(e.key === operators[i].textContent) {
+                if(choseOp) {
+                    displayValue = operate(firstNumber, operator, secondNumber);
+                    roundDecimals = String(displayValue).split(".");
+                    if(roundDecimals[1] !== undefined) {
+                        shortenDecimal();
+                    } else {
+                        display.textContent = displayValue;
+                    }
+                    display.textContent = displayValue;
+                    firstNumber = Number(displayValue);
+                    operator = operators[i].textContent;
+                    lastOperator = operator;
+                    lastSecondNumber = secondNumber;
+                    choseOp = false;
+                    displayValue = "";
+                }
+            }
+        });
     }
 }
 
@@ -181,19 +258,29 @@ function addDecimal() {
     });
 }
 
+function deleteLastFunc() {
+    if(displayValue.substring(0, displayValue.length - 1) === "") {
+        displayValue = "0";
+    } else {
+        displayValue = displayValue.substring(0, displayValue.length - 1);
+    }
+    display.textContent = displayValue;
+    
+    if(choseSecond) {
+        secondNumber = Number(displayValue); 
+    } else {
+        firstNumber = Number(displayValue);
+    }
+}
+
 function deleteLast() {
     delBtn.addEventListener("click", () => {
-        if(displayValue.substring(0, displayValue.length - 1) === "") {
-            displayValue = "0";
-        } else {
-            displayValue = displayValue.substring(0, displayValue.length - 1);
-        }
-        display.textContent = displayValue;
-        
-        if(choseSecond) {
-            secondNumber = Number(displayValue); 
-        } else {
-            firstNumber = Number(displayValue);
+        deleteLastFunc();
+    });
+
+    window.addEventListener("keydown", (e) => {
+        if(e.code === "Backspace") {
+            deleteLastFunc();
         }
     });
 }
