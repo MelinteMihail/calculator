@@ -1,15 +1,18 @@
 const numbers = document.querySelectorAll(".operand");
+const buttons = document.querySelectorAll("button");
 const operators = document.querySelectorAll(".operator");
 const equals = document.querySelector(".equals");
 const display = document.querySelector(".display");
 const clearBtn = document.querySelector(".clear");
 const decimal = document.querySelector(".decimal");
-const delBtn = document.querySelector(".delete")
+const delBtn = document.querySelector(".delete");
+const signBtn = document.querySelector(".sign");
 let displayValue = "0";
 let choseSecond = false, choseOp = false;
 let firstNumber = null, operator = null, secondNumber = null;
 let lastOperator = null, lastSecondNumber = null;
 let roundDecimals = [], alreadyPressed = false;
+let result = null;
 
 function add(num1, num2) {
     return num1 + num2;
@@ -159,7 +162,8 @@ function getSecondNumber() {
 
 function getResultWithOpFunc() {
     if(choseOp) {
-        displayValue = operate(firstNumber, operator, secondNumber);
+        result = String(operate(firstNumber, operator, secondNumber));
+        displayValue = result;
         roundDecimals = String(displayValue).split(".");
         if(roundDecimals[1] !== undefined) {
             shortenDecimal();
@@ -178,10 +182,16 @@ function getResultWithOpFunc() {
 
 function getResultFunc() {
     if(choseOp) {
-        displayValue = operate(firstNumber, operator, secondNumber);
+        result = String(operate(firstNumber, operator, secondNumber));
+        displayValue = result;
         if(operator === "/" && String(secondNumber) === "0") {
             displayValue = "";
             display.textContent = "You can't divide by 0!";
+            disableButtons();
+            setTimeout(() => {
+                resetAll();
+                enableButtons();
+            }, 2500);
         } else {
             roundDecimals = String(displayValue).split(".");
             if(roundDecimals[1] !== undefined) {
@@ -197,7 +207,8 @@ function getResultFunc() {
             secondNumber = null;
         }
     } else if(lastOperator !== null && lastSecondNumber !== null) {
-        displayValue = operate(firstNumber, lastOperator, lastSecondNumber);
+        result = String(operate(firstNumber, lastOperator, lastSecondNumber));
+        displayValue = result;
         roundDecimals = String(displayValue).split(".");
         if(roundDecimals[1] !== undefined) {
             shortenDecimal();
@@ -244,11 +255,25 @@ function addDecimal() {
     });
 }
 
+function resetAll() {
+    displayValue = "0";
+    display.textContent = displayValue;
+    choseSecond = false, choseOp = false;
+    firstNumber = null, operator = null, secondNumber = null;
+    lastOperator = null, lastSecondNumber = null;
+    roundDecimals = [];
+    result = null;
+}
+
 function deleteLastFunc() {
-    if(displayValue.substring(0, displayValue.length - 1) === "") {
-        displayValue = "0";
+    if(display.textContent === result) {
+        resetAll();
     } else {
-        displayValue = displayValue.substring(0, displayValue.length - 1);
+        if(displayValue.substring(0, displayValue.length - 1) === "") {
+            displayValue = "0";
+        } else {
+            displayValue = displayValue.substring(0, displayValue.length - 1);
+        }
     }
     updateDisplay();
     
@@ -260,6 +285,7 @@ function deleteLastFunc() {
 }
 
 function deleteLast() {
+    
     delBtn.addEventListener("click", () => {
         deleteLastFunc();
     });
@@ -273,12 +299,7 @@ function deleteLast() {
 
 function clearDisplay() {
     clearBtn.addEventListener("click", () => {
-        displayValue = "0";
-        display.textContent = displayValue;
-        choseSecond = false, choseOp = false;
-        firstNumber = null, operator = null, secondNumber = null;
-        lastOperator = null, lastSecondNumber = null;
-        roundDecimals = [];
+        resetAll();
     });
 }
 
@@ -286,6 +307,32 @@ function updateDisplay() {
     display.textContent = displayValue;
     if(displayValue.length > 9) {
         display.textContent = displayValue.substring(0, 9);
+    }
+}
+
+function changeSign() {
+    signBtn.addEventListener("click", () => {
+        displayValue = String(Number(displayValue) * -1);
+        display.textContent = displayValue;
+
+        if(choseSecond) {
+            secondNumber = Number(displayValue);
+        } else {
+            firstNumber = Number(displayValue);
+        }
+    });
+}
+
+function disableButtons() {
+    for(let i = 0; i < buttons.length; i++) {
+        buttons[i].disabled = true;
+        buttons[i].style.transition = "all 0.5s"
+    }
+}
+
+function enableButtons() {
+    for(let i = 0; i < buttons.length; i++) {
+        buttons[i].disabled = false;
     }
 }
 
@@ -298,5 +345,6 @@ function populateDisplay() {
     deleteLast();
     clearDisplay();
     updateDisplay();
+    changeSign();
 }
 populateDisplay();
