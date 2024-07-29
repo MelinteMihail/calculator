@@ -13,6 +13,7 @@ let firstNumber = null, operator = null, secondNumber = null;
 let lastOperator = null, lastSecondNumber = null;
 let roundDecimals = [], alreadyPressed = false;
 let result = null;
+let check = false;
 
 function add(num1, num2) {
     return num1 + num2;
@@ -44,13 +45,6 @@ function operate(num1, op, num2){
         case "/":
             return divide(num1, num2);
     }
-}
-
-function shortenDecimal() {
-    if(roundDecimals[1].length > 3) {
-        displayValue = String(Number(displayValue).toFixed(5));
-    }
-    updateDisplay()
 }
 
 
@@ -111,7 +105,6 @@ function getOperator() {
 
 
 function getSecondNumber() {
-    let check = false;
     for(let i = 0; i < numbers.length; i++) {
         numbers[i].addEventListener("click", () => {
             if(choseSecond) {
@@ -257,12 +250,13 @@ function addDecimal() {
 
 function resetAll() {
     displayValue = "0";
-    display.textContent = displayValue;
+    updateDisplay();
     choseSecond = false, choseOp = false;
     firstNumber = null, operator = null, secondNumber = null;
     lastOperator = null, lastSecondNumber = null;
     roundDecimals = [];
     result = null;
+    check = false;
 }
 
 function deleteLastFunc() {
@@ -305,8 +299,14 @@ function clearDisplay() {
 
 function updateDisplay() {
     display.textContent = displayValue;
-    if(displayValue.length > 9) {
-        display.textContent = displayValue.substring(0, 9);
+    if(displayValue.includes(".")){
+        if(displayValue.length > 14 ) {
+            display.textContent = displayValue.substring(0, 14);
+        }
+    } else {
+        if(displayValue.length > 9 ) {
+            display.textContent = displayValue.substring(0, 9);
+        }
     }
 }
 
@@ -323,10 +323,16 @@ function changeSign() {
     });
 }
 
+function addTransition() {
+    for(let i = 0; i < buttons.length; i++) {
+        buttons[i].style.transition = "all 0.3s";
+    }
+}
+
 function disableButtons() {
     for(let i = 0; i < buttons.length; i++) {
         buttons[i].disabled = true;
-        buttons[i].style.transition = "all 0.5s"
+        buttons[i].style.transition = "all 0.5s";
     }
 }
 
@@ -334,6 +340,14 @@ function enableButtons() {
     for(let i = 0; i < buttons.length; i++) {
         buttons[i].disabled = false;
     }
+    addTransition();
+}
+
+function shortenDecimal() {
+    if(roundDecimals[1].length > 3) {
+        displayValue = String(Number(displayValue).toFixed(5));
+    }
+    updateDisplay()
 }
 
 function populateDisplay() {
@@ -346,5 +360,6 @@ function populateDisplay() {
     clearDisplay();
     updateDisplay();
     changeSign();
+    addTransition();
 }
 populateDisplay();
