@@ -46,11 +46,10 @@ function operate(num1, op, num2){
 function shortenDecimal() {
     if(roundDecimals[1].length > 3) {
         displayValue = String(Number(displayValue).toFixed(5));
-        display.textContent = displayValue;
-    } else {
-        display.textContent = displayValue;
     }
+    updateDisplay()
 }
+
 
 function getFirstNumber() {
     for(let i = 0; i < numbers.length; i++) {
@@ -58,12 +57,11 @@ function getFirstNumber() {
             if(!choseSecond) {
                 if(displayValue === "0" || choseOp) {
                     displayValue = numbers[i].textContent;
-                    display.textContent = displayValue;
                     choseOp = false;
                 } else {
                     displayValue += numbers[i].textContent;
-                    display.textContent = displayValue;
                 }
+                updateDisplay();
                 firstNumber = Number(displayValue);
             }
         });
@@ -73,12 +71,11 @@ function getFirstNumber() {
                 if(e.code === `Digit${numbers[i].textContent}` || e.code === `Numpad${numbers[i].textContent}`){
                     if(displayValue === "0" || choseOp) {
                         displayValue = numbers[i].textContent;
-                        display.textContent = displayValue;
                         choseOp = false;
                     } else {
                         displayValue += numbers[i].textContent;
-                        display.textContent = displayValue;
                     }
+                    updateDisplay();
                     firstNumber = Number(displayValue);
                 }
             }
@@ -108,6 +105,8 @@ function getOperator() {
     }
 }
 
+
+
 function getSecondNumber() {
     let check = false;
     for(let i = 0; i < numbers.length; i++) {
@@ -120,13 +119,12 @@ function getSecondNumber() {
                     alreadyPressed = false;
                 } else {
                     if(displayValue === String(firstNumber) && !check) {
-                        displayValue = numbers[i].textContent;
-                        display.textContent = displayValue;
+                        displayValue = numbers[i].textContent;  
                         check = true;
                     } else {
                         displayValue += numbers[i].textContent;
-                        display.textContent = displayValue;
                     }
+                    updateDisplay();
                     secondNumber = Number(displayValue); 
                     choseOp = true;
                 }
@@ -144,19 +142,37 @@ function getSecondNumber() {
                         alreadyPressed = false;
                     } else {
                         if(displayValue === String(firstNumber) && !check) {
-                            displayValue = numbers[i].textContent;
-                            display.textContent = displayValue;
+                            displayValue = numbers[i].textContent;  
                             check = true;
                         } else {
                             displayValue += numbers[i].textContent;
-                            display.textContent = displayValue;
                         }
+                        updateDisplay();
                         secondNumber = Number(displayValue); 
                         choseOp = true;
                     }
                 }
             }
         });
+    }
+}
+
+function getResultWithOpFunc() {
+    if(choseOp) {
+        displayValue = operate(firstNumber, operator, secondNumber);
+        roundDecimals = String(displayValue).split(".");
+        if(roundDecimals[1] !== undefined) {
+            shortenDecimal();
+        } else {
+            updateDisplay();
+        }
+        display.textContent = displayValue;
+        firstNumber = Number(displayValue);
+        operator = operators[i].textContent;
+        lastOperator = operator;
+        lastSecondNumber = secondNumber;
+        choseOp = false;
+        displayValue = "";
     }
 }
 
@@ -171,7 +187,7 @@ function getResultFunc() {
             if(roundDecimals[1] !== undefined) {
                 shortenDecimal();
             } else {
-                display.textContent = displayValue;
+                updateDisplay();
             }
             firstNumber = Number(displayValue);
             lastOperator = operator;
@@ -186,7 +202,7 @@ function getResultFunc() {
         if(roundDecimals[1] !== undefined) {
             shortenDecimal();
         } else {
-            display.textContent = displayValue;
+            updateDisplay();
         }
         display.textContent = displayValue;
         firstNumber = Number(displayValue);
@@ -207,42 +223,12 @@ function getResult() {
 
     for(let i = 0; i < operators.length; i++) {
         operators[i].addEventListener("click", () => {
-            if(choseOp) {
-                displayValue = operate(firstNumber, operator, secondNumber);
-                roundDecimals = String(displayValue).split(".");
-                if(roundDecimals[1] !== undefined) {
-                    shortenDecimal();
-                } else {
-                    display.textContent = displayValue;
-                }
-                display.textContent = displayValue;
-                firstNumber = Number(displayValue);
-                operator = operators[i].textContent;
-                lastOperator = operator;
-                lastSecondNumber = secondNumber;
-                choseOp = false;
-                displayValue = "";
-            }
+            getResultWithOpFunc();
         });
 
         window.addEventListener("keydown", (e) => {
             if(e.key === operators[i].textContent) {
-                if(choseOp) {
-                    displayValue = operate(firstNumber, operator, secondNumber);
-                    roundDecimals = String(displayValue).split(".");
-                    if(roundDecimals[1] !== undefined) {
-                        shortenDecimal();
-                    } else {
-                        display.textContent = displayValue;
-                    }
-                    display.textContent = displayValue;
-                    firstNumber = Number(displayValue);
-                    operator = operators[i].textContent;
-                    lastOperator = operator;
-                    lastSecondNumber = secondNumber;
-                    choseOp = false;
-                    displayValue = "";
-                }
+                getResultWithOpFunc();
             }
         });
     }
@@ -252,7 +238,7 @@ function addDecimal() {
     decimal.addEventListener("click", () => {
         if(!displayValue.includes(".")) {
             displayValue += decimal.textContent;
-            display.textContent = displayValue;
+            updateDisplay();
             decimal.disabled = true;
         }
     });
@@ -264,7 +250,7 @@ function deleteLastFunc() {
     } else {
         displayValue = displayValue.substring(0, displayValue.length - 1);
     }
-    display.textContent = displayValue;
+    updateDisplay();
     
     if(choseSecond) {
         secondNumber = Number(displayValue); 
@@ -296,6 +282,13 @@ function clearDisplay() {
     });
 }
 
+function updateDisplay() {
+    display.textContent = displayValue;
+    if(displayValue.length > 9) {
+        display.textContent = displayValue.substring(0, 9);
+    }
+}
+
 function populateDisplay() {
     getFirstNumber();
     getOperator();
@@ -304,5 +297,6 @@ function populateDisplay() {
     addDecimal();
     deleteLast();
     clearDisplay();
+    updateDisplay();
 }
 populateDisplay();
