@@ -113,6 +113,8 @@ function getSecondNumber() {
                     display.textContent = numbers[i].textContent;   
                     displayValue = display.textContent;
                     alreadyPressed = false;
+                    secondNumber = Number(displayValue);
+                    choseOp = true;
                 } else {
                     if(displayValue === String(firstNumber) && !check) {
                         displayValue = numbers[i].textContent;  
@@ -153,25 +155,6 @@ function getSecondNumber() {
     }
 }
 
-function getResultWithOpFunc() {
-    if(choseOp) {
-        result = String(operate(firstNumber, operator, secondNumber));
-        displayValue = result;
-        roundDecimals = String(displayValue).split(".");
-        if(roundDecimals[1] !== undefined) {
-            shortenDecimal();
-        } else {
-            updateDisplay();
-        }
-        display.textContent = displayValue;
-        firstNumber = Number(displayValue);
-        operator = operators[i].textContent;
-        lastOperator = operator;
-        lastSecondNumber = secondNumber;
-        choseOp = false;
-        displayValue = "";
-    }
-}
 
 function getResultFunc() {
     if(choseOp) {
@@ -227,12 +210,43 @@ function getResult() {
 
     for(let i = 0; i < operators.length; i++) {
         operators[i].addEventListener("click", () => {
-            getResultWithOpFunc();
+            if(choseOp) {
+                result = String(operate(firstNumber, operator, secondNumber));
+                displayValue = result;
+                roundDecimals = String(displayValue).split(".");
+                if(roundDecimals[1] !== undefined) {
+                    shortenDecimal();
+                } else {
+                    updateDisplay();
+                }
+                display.textContent = displayValue;
+                firstNumber = Number(displayValue);
+                operator = operators[i].textContent;
+                lastOperator = operator;
+                lastSecondNumber = secondNumber;
+                choseOp = false;
+                displayValue = "";
+            }
         });
-
         window.addEventListener("keydown", (e) => {
             if(e.key === operators[i].textContent) {
-                getResultWithOpFunc();
+                if(choseOp) {
+                    result = String(operate(firstNumber, operator, secondNumber));
+                    displayValue = result;
+                    roundDecimals = String(displayValue).split(".");
+                    if(roundDecimals[1] !== undefined) {
+                        shortenDecimal();
+                    } else {
+                        updateDisplay();
+                    }
+                    display.textContent = displayValue;
+                    firstNumber = Number(displayValue);
+                    operator = operators[i].textContent;
+                    lastOperator = operator;
+                    lastSecondNumber = secondNumber;
+                    choseOp = false;
+                    displayValue = "";
+                }
             }
         });
     }
@@ -244,6 +258,16 @@ function addDecimal() {
             displayValue += decimal.textContent;
             updateDisplay();
             decimal.disabled = true;
+        }
+    });
+
+    window.addEventListener("keydown", (e) => {
+        if(e.key === decimal.textContent) {
+            if(!displayValue.includes(".")) {
+                displayValue += decimal.textContent;
+                updateDisplay();
+                decimal.disabled = true;
+            }
         }
     });
 }
