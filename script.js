@@ -336,13 +336,17 @@ function updateDisplay() {
 
 function changeSign() {
     signBtn.addEventListener("click", () => {
-        displayValue = String(Number(displayValue) * -1);
-        display.textContent = displayValue;
 
-        if(choseSecond) {
-            secondNumber = Number(displayValue);
+        if(display.textContent === result) {
+            resetAll();
         } else {
-            firstNumber = Number(displayValue);
+            displayValue = String(Number(displayValue) * -1);
+            display.textContent = displayValue; 
+            if(choseSecond) {
+                secondNumber = Number(displayValue);
+            } else {
+                firstNumber = Number(displayValue);
+            }
         }
     });
 }
