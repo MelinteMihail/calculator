@@ -378,6 +378,14 @@ function shortenDecimal() {
     updateDisplay()
 }
 
+function resetOnEscape() {
+    window.addEventListener("keydown", (e) => {
+        if(e.code === "Escape") {
+            resetAll();
+        }
+    });
+}
+
 function populateDisplay() {
     getFirstNumber();
     getOperator();
@@ -389,5 +397,6 @@ function populateDisplay() {
     updateDisplay();
     changeSign();
     addTransition();
+    resetOnEscape();
 }
 populateDisplay();
